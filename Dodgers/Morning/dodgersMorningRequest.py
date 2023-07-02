@@ -1,0 +1,54 @@
+import sys
+sys.path.append(f'/Users/nathanburns/Projects/Sports-Text')
+
+import requests
+import datetime
+from twilio.rest import Client
+import keys
+
+from dodgersMorningModel import DodgersMorningModel
+from dodgersMorningText import dodgersMorningText
+
+dodgers = "19"
+currentDate = datetime.date.today().strftime('%Y-%m-%d')
+
+espnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + dodgers
+espn = requests.get(espnUrl)
+espnData = espn.json()
+
+message = ""
+
+client = Client(keys.account_sid, keys.auth_token)
+
+if espn.status_code == 200:
+    try:
+        awayTeam = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["team"]["displayName"]
+        homeTeam = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["team"]["displayName"]
+        if (awayTeam == "Los Angeles Dodgers"):
+            win = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["winner"]
+            dodgersScore = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["score"]["displayValue"]
+            oponentScore = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["score"]["displayValue"]
+        else:
+            win = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["winner"]
+            dodgersScore = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["score"]["displayValue"]
+            oponentScore = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["score"]["displayValue"]
+        boxScoreLink = espnData["team"]["nextEvent"][0]["links"][4]["href"]
+        place = espnData["team"]["standingSummary"]
+        record = espnData["team"]["record"]["items"][0]["summary"]
+        morningModel = DodgersMorningModel(awayTeam, homeTeam, win, dodgersScore, oponentScore, boxScoreLink, place, record)
+        morningText = dodgersMorningText(morningModel)
+        message = morningText.MorningText()
+        print(morningText.message)
+    except:
+        morningText = dodgersMorningText()
+        message = morningText.MorningTextNoGame()
+        print(morningText.message)
+
+
+message = client.messages.create(
+    body=message,
+    to=keys.target_number,
+    from_=keys.twilio_number,
+)
+
+print(message.body)

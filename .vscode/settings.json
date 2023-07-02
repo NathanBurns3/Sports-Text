@@ -1,0 +1,6 @@
+{
+  "python.analysis.extraPaths": [
+    "./Dodgers/Morning/Models",
+    "./Dodgers/Morning/Controllers"
+  ]
+}
