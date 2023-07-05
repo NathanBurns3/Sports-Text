@@ -1,5 +1,6 @@
 import sys
 sys.path.append(f'/Users/nathanburns/Projects/Sports-Text')
+sys.path.append(f'/Users/nathanburns/Projects/Sports-Text/Dodgers')
 
 import requests
 import datetime
@@ -8,11 +9,11 @@ import keys
 
 from dodgersMorningModel import DodgersMorningModel
 from dodgersMorningText import dodgersMorningText
+from MLBTeams import MLBTeams
 
-dodgers = "19"
 currentDate = datetime.date.today().strftime('%Y-%m-%d')
 
-espnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + dodgers
+espnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + str(MLBTeams.LosAngelesDodgers.value)
 espn = requests.get(espnUrl)
 espnData = espn.json()
 
@@ -35,6 +36,7 @@ if espn.status_code == 200:
         boxScoreLink = espnData["team"]["nextEvent"][0]["links"][4]["href"]
         place = espnData["team"]["standingSummary"]
         record = espnData["team"]["record"]["items"][0]["summary"]
+        
         morningModel = DodgersMorningModel(awayTeam, homeTeam, win, dodgersScore, oponentScore, boxScoreLink, place, record)
         morningText = dodgersMorningText(morningModel)
         message = morningText.MorningText()

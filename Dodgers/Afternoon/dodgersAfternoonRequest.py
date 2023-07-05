@@ -1,5 +1,6 @@
 import sys
 sys.path.append(f'/Users/nathanburns/Projects/Sports-Text')
+sys.path.append(f'/Users/nathanburns/Projects/Sports-Text/Dodgers')
 
 import requests
 import datetime
@@ -8,11 +9,11 @@ import keys
 
 from dodgersAfternoonModel import DodgersAfternoonModel
 from dodgersAfternoonText import dodgersAfternoonText
+from MLBTeams import MLBTeams
 
-dodgers = "19"
 currentDate = datetime.date.today().strftime('%Y-%m-%d')
 
-espnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + dodgers
+espnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + str(MLBTeams.LosAngelesDodgers.value)
 espn = requests.get(espnUrl)
 espnData = espn.json()
 
@@ -33,15 +34,28 @@ if espn.status_code == 200:
 
         dodgersRecord = espnData["team"]["record"]["items"][0]["summary"]
 
-        awayPitcher = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["athlete"]["displayName"]
-        awayPitcherWins = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["statistics"][0]["stats"][25]["displayValue"]
-        awayPitcherLosses = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["statistics"][0]["stats"][6]["displayValue"]
-        awayPitcherERA = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["statistics"][0]["stats"][52]["displayValue"]
+        try:
+            awayPitcher = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["athlete"]["displayName"]
+            awayPitcherWins = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["statistics"][0]["stats"][25]["displayValue"]
+            awayPitcherLosses = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["statistics"][0]["stats"][6]["displayValue"]
+            awayPitcherERA = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["probables"][0]["statistics"][0]["stats"][52]["displayValue"]
+        except:
+            awayPitcher = "TBD"
+            awayPitcherWins = "0"
+            awayPitcherLosses = "0"
+            awayPitcherERA = "0"
 
-        homePitcher = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["athlete"]["displayName"]
-        homePitcherWins = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["statistics"][0]["stats"][25]["displayValue"]
-        homePitcherLosses = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["statistics"][0]["stats"][6]["displayValue"]
-        homePitcherERA = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["statistics"][0]["stats"][52]["displayValue"]
+        try:
+            homePitcher = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["athlete"]["displayName"]
+            homePitcherWins = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["statistics"][0]["stats"][25]["displayValue"]
+            homePitcherLosses = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["statistics"][0]["stats"][6]["displayValue"]
+            homePitcherERA = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["probables"][0]["statistics"][0]["stats"][52]["displayValue"]
+        except:
+            homePitcher = "TBD"
+            homePitcherWins = "0"
+            homePitcherLosses = "0"
+            homePitcherERA = "0"
+
 
         fullTime = espnData["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["shortDetail"].split()
         time = fullTime[2] + " " + fullTime[3]
@@ -50,7 +64,7 @@ if espn.status_code == 200:
         OpponentEspnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + otherTeamID
         OpponentEspn = requests.get(espnUrl)
         OpponentEspnData = espn.json()
-        otherTeamRecord = OpponentEspnData.team.record.items[0].summary
+        otherTeamRecord = OpponentEspnData["team"]["record"]["items"][0]["summary"]
 
         afternoonModel = DodgersAfternoonModel(homeTeam, otherTeam, dodgersRecord, otherTeamRecord, awayPitcher, homePitcher, awayPitcherWins, awayPitcherLosses, awayPitcherERA, homePitcherWins, homePitcherLosses, homePitcherERA, time)
         afternoonText = dodgersAfternoonText(afternoonModel)
