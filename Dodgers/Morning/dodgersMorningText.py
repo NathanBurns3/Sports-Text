@@ -15,9 +15,9 @@ class dodgersMorningText:
             self.message += "The Dodgers played the " + self.dodgersMorningModel.awayTeam + "\n\n"
         
         if self.dodgersMorningModel.win:
-            self.message += "They won\n\n"
+            self.message += "They won "
         else:
-            self.message += "They lost\n\n"
+            self.message += "They lost "
 
         self.message += str(self.dodgersMorningModel.dodgersScore) + " - " + str(self.dodgersMorningModel.opponentScore) + "\n\n"
         self.message += "Link to the box store: " + self.dodgersMorningModel.boxScoreLink + "\n\n"
