@@ -1,6 +1,6 @@
 import sys
-sys.path.append(f'/Users/nathanburns/Projects/Sports-Text')
-sys.path.append(f'/Users/nathanburns/Projects/Sports-Text/Dodgers')
+sys.path.append(f'/home/nathan-burns/Projects/Sports-Text')
+sys.path.append(f'/home/nathan-burns/Projects/Sports-Text/Dodgers')
 
 import requests
 import datetime
@@ -66,8 +66,8 @@ if espn.status_code == 200:
         
         # make api call to get other team's record
         OpponentEspnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + otherTeamID
-        OpponentEspn = requests.get(espnUrl)
-        OpponentEspnData = espn.json()
+        OpponentEspn = requests.get(OpponentEspnUrl)
+        OpponentEspnData = OpponentEspn.json()
         otherTeamRecord = OpponentEspnData["team"]["record"]["items"][0]["summary"]
 
         afternoonModel = DodgersAfternoonModel(homeTeam, otherTeam, dodgersRecord, otherTeamRecord, awayPitcher, homePitcher, awayPitcherWins, awayPitcherLosses, awayPitcherERA, homePitcherWins, homePitcherLosses, homePitcherERA, time)

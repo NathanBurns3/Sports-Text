@@ -2,5 +2,7 @@
   "python.analysis.extraPaths": [
     "./Dodgers/Morning/Models",
     "./Dodgers/Morning/Controllers"
-  ]
+  ],
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": false
 }

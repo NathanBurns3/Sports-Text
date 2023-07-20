@@ -1,6 +1,6 @@
 import sys
-sys.path.append(f'/Users/nathanburns/Projects/Sports-Text')
-sys.path.append(f'/Users/nathanburns/Projects/Sports-Text/Dodgers')
+sys.path.append(f'/home/nathan-burns/Projects/Sports-Text')
+sys.path.append(f'/home/nathan-burns/Projects/Sports-Text/Dodgers')
 
 import requests
 import datetime
