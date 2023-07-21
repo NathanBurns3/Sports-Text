@@ -14,6 +14,7 @@ from dodgersMorningText import dodgersMorningText
 from MLBTeams import MLBTeams
 
 currentDate = datetime.date.today().strftime('%Y-%m-%d')
+yesterdayDate = (datetime.date.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
 
 espnUrl = "http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + str(MLBTeams.LosAngelesDodgers.value)
 espn = requests.get(espnUrl)
@@ -25,6 +26,10 @@ client = Client(keys.account_sid, keys.auth_token)
 
 if espn.status_code == 200:
     try:
+        comparisonDate = (espnData["team"]["nextEvent"][0]["date"]).split("T")[0]
+        if (currentDate != yesterdayDate):
+            raise Exception("different date")
+
         awayTeam = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["team"]["displayName"]
         homeTeam = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["team"]["displayName"]
         if (awayTeam == "Los Angeles Dodgers"):
