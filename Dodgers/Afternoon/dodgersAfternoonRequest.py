@@ -25,10 +25,6 @@ client = Client(keys.account_sid, keys.auth_token)
 
 if espn.status_code == 200:
     try:
-        comparisonDate = (espnData["team"]["nextEvent"][0]["date"]).split("T")[0]
-        if (currentDate != comparisonDate):
-            raise Exception("different date")
-
         awayTeam = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][1]["team"]["displayName"]
         homeTeam = espnData["team"]["nextEvent"][0]["competitions"][0]["competitors"][0]["team"]["displayName"]
         if (awayTeam == "Los Angeles Dodgers"):
